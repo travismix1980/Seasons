@@ -8,25 +8,27 @@ class App extends Component{
 
         this.state = {
             lat: null,
-            lon: null,
+            errorMessage: '',
         };
 
         window.navigator.geolocation.getCurrentPosition((position) =>{
             let lat = position.coords.latitude;
-            let lon = position.coords.longitude;
-            this.setState({lat, lon});
+            this.setState({lat});
         }, (err) =>{
-            console.log(err);
+            this.setState({errorMessage: err.message});
         });
     }
 
     render(){
-        return (
-        <div>
-            <h2>Latitude: {this.state.lat}</h2>
-            <h2>Longitute: {this.state.lon}</h2>
-        </div>
-        );
+        if(this.state.errorMessage && !this.state.lat){
+            return <div>Error: {this.state.errorMessage}</div>
+        }
+        else if(!this.state.errorMessage && this.state.lat){
+            return<div>Latitude: {this.state.lat}</div>
+        }
+        else {
+            return<div>Loading...</div>
+        }
     }
 }
 
